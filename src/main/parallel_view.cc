@@ -78,6 +78,9 @@ extern GtkWidget *entryIntLookup;
 
 SWBuf unknown_parallel = _("Unknown parallel module: ");
 
+// for alternation color ease.
+gchar *white = "#FFFFFF", *grey  = "#606060", *bg_choice;
+
 /******************************************************************************
  * static
  */
@@ -631,6 +634,12 @@ void main_update_parallel_page(void)
 	data = g_string_new(tmpBuf);
 	g_free(tmpBuf);
 
+	// if alternating && bg color is white, substitute a milder grey for harsh black bg.
+	if (settings.alternation && !strcmp(settings.bible_bg_color, white))
+		bg_choice = grey;	// avoid blaring visual contrast
+	else
+		bg_choice = settings.bible_text_color;
+
 	if (settings.parallel_list) {
 		gchar *mod_name;
 		for (modidx = 0;
@@ -654,7 +663,7 @@ void main_update_parallel_page(void)
 
 			/* alternating background color */
 			if (settings.alternation && (modidx % 2 == 1)) {
-				rowcolor = settings.bible_text_color;
+				rowcolor = bg_choice;
 				textcolor = settings.bible_bg_color;
 			} else {
 				rowcolor = settings.bible_bg_color;
@@ -825,6 +834,12 @@ static void interpolate_parallel_display(SWModule *control,
 	cur_verse = backend_p->key_get_verse(control_name, tmpkey);
 	settings.intCurVerse = cur_verse;
 
+	// if alternating && bg color is white, substitute a milder grey for harsh black bg.
+	if (settings.alternation && !strcmp(settings.bible_bg_color, white))
+		bg_choice = grey;	// avoid blaring visual contrast
+	else
+		bg_choice = settings.bible_text_color;
+
 	for (verse = 1; verse <= xverses; ++verse) {
 		snprintf(tmpbuf, 255, "%s %d:%d", cur_book, cur_chapter, verse);
 		free(tmpkey);
@@ -834,7 +849,7 @@ static void interpolate_parallel_display(SWModule *control,
 
 		// alternate background colors.
 		bgColor = (settings.alternation && (verse % 2 == 0))
-			? settings.bible_text_color
+			? bg_choice
 			: settings.bible_bg_color;
 
 		for (modidx = 0; modidx < parallel_count; modidx++) {
