@@ -73,7 +73,7 @@
 #else
 // System TTS on Linux
 #ifdef __linux__
-#include <libspeechd.h>
+#include <speech-dispatcher/libspeechd.h>
 #endif
 #endif
 #include "xiphos_html/xiphos_html.h"

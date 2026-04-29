@@ -588,13 +588,6 @@ static gboolean on_vbox1_key_press_event(GtkWidget *widget, GdkEventKey *event,
 	guint state =
 	    event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK |
 			    GDK_MOD1_MASK | GDK_MOD4_MASK);
-	// Ctrl+R: Toggle read aloud for current verse
-	if ((event->state & GDK_CONTROL_MASK) && event->keyval == 0x072) {
-    settings.readaloud = !settings.readaloud;
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widgets.readaloud_item), 
-                                   settings.readaloud);
-    return TRUE;
-}
 	
 	switch (event->keyval) {
 	case XK_Shift_L: /* shift keys - we need this for locking strongs (and */
@@ -787,6 +780,13 @@ static gboolean on_vbox1_key_press_event(GtkWidget *widget, GdkEventKey *event,
 					   (main_check_for_global_option(sM, "OSISRedLetterWords"))),
 					  "Words of Christ in Red");
 		}
+		else if (state == GDK_CONTROL_MASK) // Ctrl-R: Toggle read aloud
+		{
+			settings.readaloud = !settings.readaloud;
+			gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(widgets.readaloud_item), 
+						       settings.readaloud);
+		}
+
 		break;
 
 	case XK_s:
