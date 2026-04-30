@@ -1505,21 +1505,19 @@ G_MODULE_EXPORT void on_read_selection_aloud_activate(GtkMenuItem *
 							  menuitem,
 						      gpointer user_data)
 {
-	gchar *dict_key;
-	int len;
 	GtkWidget *html_widget = _get_html();
 
-	XIPHOS_HTML_COPY_SELECTION(html_widget);
-	gtk_editable_select_region((GtkEditable *)widgets.entry_dict, 0,
-				   -1);
-	gtk_editable_paste_clipboard((GtkEditable *)widgets.entry_dict);
-	dict_key =
-	    g_strdup(gtk_editable_get_chars((GtkEditable *)widgets.entry_dict, 0, -1));
-	len = (dict_key ? strlen(dict_key) : 0);
+	GdkDisplay *display = gtk_widget_get_display(html_widget);
+    
+	GtkClipboard *clipboard =
+		gtk_clipboard_get_for_display(display, GDK_SELECTION_PRIMARY);
+    
+	gchar *text = gtk_clipboard_wait_for_text(clipboard);
+	int len = (text ? strlen(text) : 0);
 
-	if (dict_key && len && *dict_key) {
-		ReadAloud(0, dict_key);
-		g_free(dict_key);
+	if (text && len && *text) {
+		ReadAloud(0, text);
+		g_free(text);
 	} else
 		gui_generic_warning("No selection made");
 }
