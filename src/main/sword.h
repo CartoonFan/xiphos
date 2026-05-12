@@ -146,6 +146,18 @@ char **main_get_module_language_list(void);
 void main_init_language_map(void);
 void main_devotional_button_clicked(gint direction);
 
+#ifdef WIN32
+// System TTS for Windows
+// Moved here from src/gtk/utilities.c.
+
+extern void* tts_handle;
+void WindowsInitSystemTTS(void);
+void WindowsStopSystemTTS(void);
+gboolean WindowsSystemSpeak(gchar *text, int length);
+void WindowsStopReading(void);
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif
